@@ -1,12 +1,10 @@
 package com.diy.app;
 
-import java.math.BigDecimal;
-
 public class Lecture {
 
     private Long id;
     private String name;
-    private BigDecimal price;
+    private Long price;
 
     public Lecture() {
     }
@@ -15,15 +13,23 @@ public class Lecture {
         return id;
     }
 
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public BigDecimal getPrice() {
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public Long getPrice() {
         return price;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPrice(final Long price) {
+        this.price = price;
     }
 }
