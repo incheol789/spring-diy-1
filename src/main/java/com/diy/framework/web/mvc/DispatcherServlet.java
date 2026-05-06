@@ -1,6 +1,9 @@
 package com.diy.framework.web.mvc;
 
 import com.diy.app.LectureController;
+import com.diy.framework.web.beans.Component;
+import com.diy.framework.web.beans.factory.BeanFactory;
+import com.diy.framework.web.beans.factory.BeanScanner;
 import com.diy.framework.web.mvc.view.JspViewResolver;
 import com.diy.framework.web.mvc.view.View;
 import com.diy.framework.web.mvc.view.ViewResolver;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @WebServlet("/")
 public class DispatcherServlet extends HttpServlet {
@@ -22,7 +26,16 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init() {
-        controllers.put("/lectures", new LectureController());
+        // BeanScanner로 @Copmonent 클래스 스캔
+        final BeanScanner scanner = new BeanScanner("com.diy");
+        final Set<Class<?>> beanClasses = scanner.scanClassesTypeAnnotatedWith(Component.class);
+
+        // BeanFactory로 빈 생성 + 의존성 주입
+        final BeanFactory beanFactory = new BeanFactory();
+        beanFactory.createBeans(beanClasses);
+
+        // Controller 타입 빈만 꺼내서 URL 매핑 (수동 등록)
+        controllers.put("/lectures", beanFactory.getBean(LectureController.class));
     }
 
     @Override
